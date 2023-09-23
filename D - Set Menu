@@ -1,0 +1,88 @@
+Beginner-321
+
+STATEMENT
+AtCoder cafeteria offers N main dishes and M side dishes. The price of the i-th main dish is Ai​, 
+and that of the j-th side dish is Bj​. The cafeteria is considering introducing a new set meal menu. 
+A set meal consists of one main dish and one side dish. Let s be the sum of the prices of the main dish and 
+the side dish, then the price of the set meal is min(s,P). Here,
+P is a constant given in the input.
+There are NM ways to choose a main dish and a side dish for a set meal. Find the total price of all these set meals.
+
+SOLUTION
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define pb push_back
+#define no cout<<"No"<<endl;
+#define yes cout<<"Yes"<<endl;
+#define neg cout<<-1<<endl;
+
+const int mod=1e9+7;
+
+int a[200009], b[200009], dp[200009];
+
+void solve()
+{
+    int n,m;
+    int p;
+    cin>>n>>m>>p;
+
+    for(int i=1; i<=n; i++)
+    {
+        cin>>a[i];
+    }
+    for(int i=1; i<=m; i++)
+    {
+        cin>>b[i];
+    }
+
+    sort(b+1,b+m+1);
+    for(int i=1; i<=m; i++)
+    {
+        dp[i]=dp[i-1]+b[i];
+    }
+
+    int ans=0;
+
+    for(int i=1; i<=n; i++)
+    {
+        int lo=1;
+        int hi=m;
+        int pos=0;
+
+        while(hi>=lo)
+        {
+            int mid=(hi+lo)/2;
+
+            if(a[i]+b[mid]<=p)
+            {
+                pos=mid;
+                lo=mid+1;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }
+        ans+=dp[pos];
+        ans+=1LL*pos*a[i];
+        ans+=p*(m-pos);
+    }
+
+    cout<<ans<<"\n";
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int test=1;
+    //cin>>test;
+    for(int t=1; t<=test; t++)
+    {
+        solve();
+    }
+
+}
