@@ -1,0 +1,113 @@
+E - Our clients, please wait a moment
+
+STATEMENT
+There are N cities in a certain country. You will travel from your office in city 1 to a destination in city N, 
+via zero or more cities. Two types of transportation are available: company car and train. 
+The time required to travel from city i to city j is as follows:
+Di,j​×A minutes by company car, and Di,j​×B+C minutes by train.
+You can switch from company car to train, but not vice versa.
+You can do so without spending time, but only in a city.
+What is the minimum time in minutes to travel from city 1 to city N?
+
+SOLUTION
+
+C++
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define yes cout << "Yes" << endl;
+#define no cout << "No" << endl;
+#define neg cout << -1 << endl;
+#define pb push_back
+int mod = 1e9 + 7;
+
+const int INF = 1e18;
+
+int n, a, b, c;
+int matrix[1009][1009];
+
+void dijkstra(int src, int dist[], int type)
+{
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>>pq;
+
+    fill(dist, dist+n+1, INF);
+
+    pq.push({0, src});
+    dist[src]=0;
+    while(!pq.empty())
+    {
+        auto [dis, node]=pq.top();
+        pq.pop();
+
+        if(dist[node] < dis)
+        {
+            continue;
+        }
+
+        for(int j=1; j<=n; j++)
+        {
+            int ndis;
+            if(type==0)
+            {
+                ndis=dis+matrix[node][j]*a;
+            }
+            else
+            {
+                ndis=dis+matrix[node][j]*b+c;
+            }
+
+            if(ndis<dist[j])
+            {
+                pq.push({ndis, j});
+                dist[j]=ndis;
+            }
+        }
+    }
+
+
+}
+
+void solve()
+{
+    cin>>n>>a>>b>>c;
+    for(int i=1; i<=n; i++)
+    {
+        for(int j=1; j<=n; j++)
+        {
+            cin>>matrix[i][j];
+        }
+    }
+
+    int stoe[1009], etos[1009];
+    dijkstra(1, stoe, 0);
+    dijkstra(n, etos, 1);
+    int ans=INF;
+    for(int i=1; i<=n; i++)
+    {
+        ans=min(ans, stoe[i]+etos[i]);
+    }
+
+    cout<<ans<<endl;
+
+
+
+
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    int test = 1;
+    //cin >> test;
+
+    for (int tc = 1; tc <= test; tc++)
+    {
+        solve();
+    }
+
+    return 0;
+}
