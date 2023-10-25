@@ -1,0 +1,95 @@
+D - Printing Machine
+
+STATEMENT
+There are N products labeled 1 to N flowing on a conveyor belt. A Keyence printer is attached to the conveyor belt, 
+and product i enters the range of the printer Ti​ microseconds from now and leaves it Di​ microseconds later.
+The Keyence printer can instantly print on one product within the range of the printer (in particular, 
+it is possible to print at the moment the product enters or leaves the range of the printer). 
+However, after printing once, it requires a charge time of
+1 microseconds before it can print again. What is the maximum number of products the printer can print on when 
+the product and timing for the printer to print are chosen optimally? 
+
+SOLUTION]
+
+C++
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define yes cout << "Yes" << endl;
+#define no cout << "No" << endl;
+#define neg cout << -1 << endl;
+#define pb push_back
+int mod = 1e9 + 7;
+
+const int INF = 1e18;
+
+void solve()
+{
+    int n;
+    cin>>n;
+    vector<pair<int, int>>v(n);
+    for(int i=0; i<n; i++)
+    {
+        cin>>v[i].first>>v[i].second;
+        v[i].second+=v[i].first;
+    }
+
+
+    sort(v.begin(), v.end(), [&](pair<int, int>i, pair<int, int>j)
+    {
+        return (i.second != j.second) ? i.second < j.second : i.first < j.first;
+    });
+
+    set<int>s, t;
+
+    for(auto it:v)
+    {
+        s.insert(it.first);
+    }
+    int ans=0;
+
+    for(int i=0; i<n; i++)
+    {
+        auto it=s.lower_bound(v[i].first);
+        while(it!=s.end() && t.find(*it)!=t.end())
+        {
+            s.erase(*it);
+            it=s.lower_bound(v[i].first);
+            //it++;
+            //auto next_it = it; // Make a copy of 'it'
+            //next_it++; // Increment the copy
+            //it = next_it; // Set 'it' to the incremented copy
+        }
+
+        int k=*it;
+        if(k<=v[i].second)
+        {
+            ans++;
+            s.erase(k);
+            s.insert(k+1);
+            t.insert(k);
+        }
+    }
+
+    cout<<ans<<endl;
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    int test = 1;
+    //cin >> test;
+
+    for (int tc = 1; tc <= test; tc++)
+    {
+        solve();
+    }
+
+    return 0;
+}
+
+
